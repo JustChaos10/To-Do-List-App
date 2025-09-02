@@ -17,7 +17,7 @@ export function TodoForm({ open, onOpenChange }: { open: boolean; onOpenChange: 
     setError(null);
     const parsed = createTodoSchema.safeParse({ title, description });
     if (!parsed.success) {
-      setError(parsed.error.errors[0]?.message ?? "Invalid input");
+      setError(parsed.error.issues[0]?.message ?? "Invalid input");
       return;
     }
     await create.mutateAsync(parsed.data);
