@@ -3,7 +3,11 @@ import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
 export const createServerSupabase = () => {
-  const cookieStore = cookies();
+  // Next.js 15 types mark cookies() as possibly async in some contexts; cast to keep sync API for Supabase SSR helper
+  const cookieStore = cookies() as unknown as {
+    get: (name: string) => { value: string } | undefined;
+    set: (init: { name: string; value: string } & Record<string, unknown>) => void;
+  };
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL as string;
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string;
   if (!supabaseUrl || !supabaseAnonKey) {
