@@ -5,7 +5,15 @@ import type { CreateTodoInput, UpdateTodoInput } from "@/lib/validation/todo";
 type TodosResponse = { items: Array<{ id: string; title: string; description?: string | null; completed: boolean }>; nextCursor: string | null };
 
 export function useTodos(params: URLSearchParams | Record<string, string | undefined> = {}) {
-  const search = new URLSearchParams(params as Record<string, string | undefined>).toString();
+  let search = "";
+  if (params instanceof URLSearchParams) {
+    search = params.toString();
+  } else {
+    const entries = Object.entries(params)
+      .filter(([, v]) => typeof v === "string")
+      .map(([k, v]) => [k, v as string]);
+    search = new URLSearchParams(entries as [string, string][]).toString();
+  }
   return useQuery({
     queryKey: ["todos", search],
     queryFn: async () => {
