@@ -17,7 +17,7 @@ const paginationSchema = z.object({
 });
 
 export async function GET(req: NextRequest) {
-  const ip = req.ip ?? "anonymous";
+  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "anonymous";
   if (!rateLimit(`todos:get:${ip}`)) return NextResponse.json({ error: "rate_limited" }, { status: 429 });
   const supabase = createServerSupabase();
   const {
@@ -50,7 +50,7 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const ip = req.ip ?? "anonymous";
+  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "anonymous";
   if (!rateLimit(`todos:post:${ip}`)) return NextResponse.json({ error: "rate_limited" }, { status: 429 });
   const supabase = createServerSupabase();
   const { data: auth, error: authError } = await supabase.auth.getUser();
@@ -65,7 +65,7 @@ export async function POST(req: NextRequest) {
 }
 
 export async function PATCH(req: NextRequest) {
-  const ip = req.ip ?? "anonymous";
+  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "anonymous";
   if (!rateLimit(`todos:patch:${ip}`)) return NextResponse.json({ error: "rate_limited" }, { status: 429 });
   const supabase = createServerSupabase();
   const { data: auth, error: authError } = await supabase.auth.getUser();
@@ -86,7 +86,7 @@ export async function PATCH(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
-  const ip = req.ip ?? "anonymous";
+  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "anonymous";
   if (!rateLimit(`todos:delete:${ip}`)) return NextResponse.json({ error: "rate_limited" }, { status: 429 });
   const supabase = createServerSupabase();
   const { data: auth, error: authError } = await supabase.auth.getUser();
