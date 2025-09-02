@@ -58,7 +58,7 @@ export async function POST(req: NextRequest) {
   const body = await req.json();
   const parsed = createTodoSchema.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
-  const insert = { ...parsed.data, user_id: auth.user.id } as any;
+  const insert: { user_id: string } & typeof parsed.data = { ...parsed.data, user_id: auth.user.id };
   const { data, error } = await supabase.from("todos").insert(insert).select("*").single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json({ item: data }, { status: 201 });

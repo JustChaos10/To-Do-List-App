@@ -3,7 +3,14 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { useUpdateTodo } from "@/lib/hooks/use-todos";
 
-export function TodoItem({ todo }: { todo: any }) {
+type Todo = {
+  id: string;
+  title: string;
+  description?: string | null;
+  completed: boolean;
+};
+
+export function TodoItem({ todo }: { todo: Todo }) {
   const update = useUpdateTodo();
   return (
     <div className="flex items-center gap-3 py-2">

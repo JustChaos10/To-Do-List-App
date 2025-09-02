@@ -3,7 +3,7 @@ import DashboardPage from "../page";
 
 describe("DashboardPage", () => {
   it("renders header", () => {
-    render(<DashboardPage /> as any);
+    render(<DashboardPage />);
     expect(screen.getByText(/Your To-Dos/i)).toBeInTheDocument();
   });
 });

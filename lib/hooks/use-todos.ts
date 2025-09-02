@@ -2,14 +2,16 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { CreateTodoInput, UpdateTodoInput } from "@/lib/validation/todo";
 
+type TodosResponse = { items: Array<{ id: string; title: string; description?: string | null; completed: boolean }>; nextCursor: string | null };
+
 export function useTodos(params: URLSearchParams | Record<string, string | undefined> = {}) {
-  const search = new URLSearchParams(params as any).toString();
+  const search = new URLSearchParams(params as Record<string, string | undefined>).toString();
   return useQuery({
     queryKey: ["todos", search],
     queryFn: async () => {
       const res = await fetch(`/api/todos?${search}`);
       if (!res.ok) throw new Error("Failed to load");
-      return (await res.json()) as { items: any[]; nextCursor: string | null };
+      return (await res.json()) as TodosResponse;
     },
   });
 }
